@@ -8,6 +8,7 @@ import br.ce.wcaquino.utils.DataUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
+import org.junit.rules.ExpectedException;
 
 import java.util.Date;
 
@@ -19,8 +20,12 @@ public class LocacaoServiceTest {
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+
     @Test
-    public void teste() {
+    public void testeLocacao() throws Exception {
         //cenario
         LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Usuario 1");
@@ -35,5 +40,54 @@ public class LocacaoServiceTest {
         assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
         assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
     }
+
+    @Test(expected = Exception.class)
+    public void testeLocacaoFilmeSemEstoque() throws Exception {
+
+        //cenario
+        LocacaoService service = new LocacaoService();
+        Usuario usuario = new Usuario("Usuario 1");
+        Filme filme = new Filme("Filme 1", 0, 5.0);
+
+        //acao
+        service.alugarFilme(usuario, filme);
+
+    }
+
+    @Test
+    public void testeLocacaoFilmeSemEstoque2() {
+
+        //cenario
+        LocacaoService service = new LocacaoService();
+        Usuario usuario = new Usuario("Usuario 1");
+        Filme filme = new Filme("Filme 1", 0, 5.0);
+
+        //acao
+        try {
+            service.alugarFilme(usuario, filme);
+            fail("Deveria ter lancado uma exception");
+        } catch (Exception e) {
+            assertThat(e.getMessage(), is("Filme sem estoque"));
+        }
+
+    }
+
+    @Test
+    public void testeLocacaoFilmeSemEstoque3() throws Exception {
+
+        //cenario
+        LocacaoService service = new LocacaoService();
+        Usuario usuario = new Usuario("Usuario 1");
+        Filme filme = new Filme("Filme 1", 0, 5.0);
+
+        exception.expect(Exception.class);
+        exception.expectMessage("Filme sem estoque");
+
+        //acao
+        service.alugarFilme(usuario, filme);
+
+    }
+
+
 
 }
