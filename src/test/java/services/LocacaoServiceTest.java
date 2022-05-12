@@ -11,7 +11,10 @@ import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -49,10 +52,10 @@ public class LocacaoServiceTest {
 
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
-        Filme filme = new Filme("Filme 1", 2, 5.0);
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 2, 5.0));
 
         //acao
-        Locacao locacao = service.alugarFilme(usuario, filme);
+        Locacao locacao = service.alugarFilme(usuario, filmes);
 
         //verificao
         errorCollector.checkThat(locacao.getValor(), is(equalTo(5.0)));
@@ -66,10 +69,10 @@ public class LocacaoServiceTest {
 
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
-        Filme filme = new Filme("Filme 1", 0, 5.0);
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 0, 5.0));
 
         //acao
-        service.alugarFilme(usuario, filme);
+        service.alugarFilme(usuario, filmes);
 
     }
 
@@ -77,11 +80,11 @@ public class LocacaoServiceTest {
     public void testeLocacaoUsuarioVazio() throws Exception {
 
         //cenario
-        Filme filme = new Filme("Filme 1", 1, 5.0);
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 1, 5.0));
 
         //acao
         try {
-            service.alugarFilme(null, filme);
+            service.alugarFilme(null, filmes);
             fail("Deveria gerar uma LocadoraException");
         } catch (LocadoraException e) {
             assertThat(e.getMessage(), is("Usuario vazio"));
