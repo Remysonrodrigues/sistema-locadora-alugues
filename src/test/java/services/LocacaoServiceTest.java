@@ -12,6 +12,7 @@ import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -168,6 +169,18 @@ public class LocacaoServiceTest {
         Locacao resultado = service.alugarFilme(usuario, filmes);
         //verificacao
         assertThat(resultado.getValor(), is(14.0));
+    }
+
+    @Test
+    public void deveDevolverFilmeNaSegundaAoAlugarNoSabado() throws Exception {
+        //cenario
+        Usuario usuario = new Usuario("Usuario 1");
+        List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 1, 5.0));
+        //acao
+        Locacao resultado = service.alugarFilme(usuario, filmes);
+        //verificacao
+        boolean ehSegunda = DataUtils.verificarDiaSemana(resultado.getDataRetorno(), Calendar.MONDAY);
+        assertTrue(ehSegunda);
     }
 
 }
