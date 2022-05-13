@@ -49,6 +49,8 @@ public class LocacaoServiceTest {
 
     @Test
     public void deveAlugarFilme() throws Exception {
+        // Assuma que este esta não sera executado em um sabado
+        Assume.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SUNDAY));
 
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
@@ -173,6 +175,8 @@ public class LocacaoServiceTest {
 
     @Test
     public void deveDevolverFilmeNaSegundaAoAlugarNoSabado() throws Exception {
+        // Assuma que esse teste sera executado em um sabado
+        Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SUNDAY));
         //cenario
         Usuario usuario = new Usuario("Usuario 1");
         List<Filme> filmes = Arrays.asList(new Filme("Filme 1", 1, 5.0));
