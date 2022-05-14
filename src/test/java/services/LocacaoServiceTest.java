@@ -7,6 +7,8 @@ import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.exceptions.LocadoraException;
 import br.ce.wcaquino.servicos.LocacaoService;
 import br.ce.wcaquino.utils.DataUtils;
+import matchers.DiaSemanaMatcher;
+import matchers.MatchersProprios;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
@@ -117,8 +119,7 @@ public class LocacaoServiceTest {
         //acao
         Locacao resultado = service.alugarFilme(usuario, filmes);
         //verificacao
-        boolean ehSegunda = DataUtils.verificarDiaSemana(resultado.getDataRetorno(), Calendar.MONDAY);
-        assertTrue(ehSegunda);
+        assertThat(resultado.getDataRetorno(), MatchersProprios.cairNumaSegunda());
     }
 
 }
