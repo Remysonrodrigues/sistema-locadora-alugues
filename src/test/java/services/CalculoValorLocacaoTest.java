@@ -4,6 +4,7 @@ import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.servicos.LocacaoService;
+import builders.FilmeBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,42 +41,42 @@ public class CalculoValorLocacaoTest {
         return Arrays.asList(new Object[][] {
             {
                 Arrays.asList(
-                    new Filme("Filme 1", 2, 4.0),
-                    new Filme("Filme 2", 2, 4.0),
-                    new Filme("Filme 3", 2, 4.0)
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora()
                 ),
                 11.0,
                 "3 Filmes: 25%"
             },
             {
                 Arrays.asList(
-                    new Filme("Filme 1", 2, 4.0),
-                    new Filme("Filme 2", 2, 4.0),
-                    new Filme("Filme 3", 2, 4.0),
-                    new Filme("Filme 4", 2, 4.0)
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora()
                 ),
                 13.0,
                 "4 Filmes: 50%"
             },
             {
                 Arrays.asList(
-                    new Filme("Filme 1", 2, 4.0),
-                    new Filme("Filme 2", 2, 4.0),
-                    new Filme("Filme 3", 2, 4.0),
-                    new Filme("Filme 4", 2, 4.0),
-                    new Filme("Filme 5", 2, 4.0)
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora()
                 ),
                 14.0,
                 "5 Filmes: 75%"
             },
             {
                 Arrays.asList(
-                    new Filme("Filme 1", 2, 4.0),
-                    new Filme("Filme 2", 2, 4.0),
-                    new Filme("Filme 3", 2, 4.0),
-                    new Filme("Filme 4", 2, 4.0),
-                    new Filme("Filme 5", 2, 4.0),
-                    new Filme("Filme 6", 2, 4.0)
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora(),
+                    FilmeBuilder.umFilme().agora()
                 ),
                 14.0,
                 "6 Filmes: 100%"

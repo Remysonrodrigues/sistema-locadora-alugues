@@ -4,12 +4,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import org.junit.runners.Suite.*;
 import services.CalculadoraTest;
 import services.CalculoValorLocacaoTest;
 import services.LocacaoServiceTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
+@SuiteClasses({
     CalculadoraTest.class,
     CalculoValorLocacaoTest.class,
     LocacaoServiceTest.class
