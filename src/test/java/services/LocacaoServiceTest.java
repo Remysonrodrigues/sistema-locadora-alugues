@@ -14,6 +14,7 @@ import builders.UsuarioBuilder;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -37,7 +38,7 @@ public class LocacaoServiceTest {
     @Before
     public void setup() { // Executa antes de cada teste
         service = new LocacaoService();
-        LocacaoDAO dao = new LocacaoDAOFake();
+        LocacaoDAO dao = Mockito.mock(LocacaoDAO.class);
         service.setLocacaoDAO(dao);
     }
 
