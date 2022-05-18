@@ -6,6 +6,7 @@ import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.servicos.LocacaoService;
+import br.ce.wcaquino.servicos.SPCService;
 import builders.FilmeBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +40,8 @@ public class CalculoValorLocacaoTest {
         service = new LocacaoService();
         LocacaoDAO dao = Mockito.mock(LocacaoDAO.class);
         service.setLocacaoDAO(dao);
+        SPCService spc = Mockito.mock(SPCService.class);
+        service.setSPCService(spc);
     }
 
     @Parameterized.Parameters(name = "{2}")
