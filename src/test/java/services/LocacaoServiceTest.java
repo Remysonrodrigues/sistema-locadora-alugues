@@ -7,10 +7,12 @@ import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.exceptions.LocadoraException;
+import br.ce.wcaquino.servicos.EmailService;
 import br.ce.wcaquino.servicos.LocacaoService;
 import br.ce.wcaquino.servicos.SPCService;
 import br.ce.wcaquino.utils.DataUtils;
 import builders.FilmeBuilder;
+import builders.LocacaoBuilder;
 import builders.UsuarioBuilder;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
@@ -40,6 +42,8 @@ public class LocacaoServiceTest {
 
     private SPCService spc;
 
+    private EmailService email;
+
     @Before
     public void setup() { // Executa antes de cada teste
         service = new LocacaoService();
@@ -47,6 +51,8 @@ public class LocacaoServiceTest {
         service.setLocacaoDAO(dao);
         spc = Mockito.mock(SPCService.class);
         service.setSPCService(spc);
+        email = Mockito.mock(EmailService.class);
+        service.setEmailService(email);
     }
 
     @After
@@ -135,18 +141,40 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void naoDeveAlugarFilmeParaNegativadoSPC() throws Exception {
+    public void naoDeveAlugarFilmeParaNegativadoSPC() {
         //cenario
         Usuario usuario = UsuarioBuilder.umUsuario().agora();
         List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().agora());
 
         Mockito.when(spc.possuiNegativacao(usuario)).thenReturn(true);
 
-        exception.expect(LocadoraException.class);
-        exception.expectMessage("Usuário Negativado");
+        //acao
+        try {
+            service.alugarFilme(usuario, filmes);
+        //verificacao
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertThat(e.getMessage(), is("Usuário Negativado"));
+        }
+
+        Mockito.verify(spc).possuiNegativacao(usuario);
+    }
+
+    @Test
+    public void deveEnviarEmailParaLocacoesAtrasadas() throws Exception {
+        //cenario
+        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().agora());
+        List<Locacao> locacaos = Arrays.asList(
+            new Locacao(usuario, filmes, new Date(), DataUtils.obterDataComDiferencaDias(-2), 4.0)
+        );
+
+        Mockito.when(dao.obterLocacoesPendentes()).thenReturn(locacaos);
 
         //acao
-        Locacao resultado = service.alugarFilme(usuario, filmes);
+        service.notificarAtrasos();
+        //verificacao
+        Mockito.verify(email).notificarAtraso(usuario);
     }
 
 }
