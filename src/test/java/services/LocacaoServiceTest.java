@@ -146,7 +146,7 @@ public class LocacaoServiceTest {
         Usuario usuario = UsuarioBuilder.umUsuario().agora();
         List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().agora());
 
-        Mockito.when(spc.possuiNegativacao(usuario)).thenReturn(true);
+        Mockito.when(spc.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
 
         //acao
         try {
@@ -164,9 +164,13 @@ public class LocacaoServiceTest {
     public void deveEnviarEmailParaLocacoesAtrasadas() throws Exception {
         //cenario
         Usuario usuario = UsuarioBuilder.umUsuario().agora();
-        List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().agora());
+        Usuario usuario2 = UsuarioBuilder.umUsuario().comNome("Usuario em dia").agora();
+        Usuario usuario3 = UsuarioBuilder.umUsuario().comNome("Outro atrasado").agora();
         List<Locacao> locacaos = Arrays.asList(
-            new Locacao(usuario, filmes, new Date(), DataUtils.obterDataComDiferencaDias(-2), 4.0)
+            LocacaoBuilder.umLocacao().comUsuario(usuario).atrasado().agora(),
+            LocacaoBuilder.umLocacao().comUsuario(usuario2).agora(),
+            LocacaoBuilder.umLocacao().comUsuario(usuario3).atrasado().agora(),
+            LocacaoBuilder.umLocacao().comUsuario(usuario3).atrasado().agora()
         );
 
         Mockito.when(dao.obterLocacoesPendentes()).thenReturn(locacaos);
@@ -174,7 +178,11 @@ public class LocacaoServiceTest {
         //acao
         service.notificarAtrasos();
         //verificacao
+        Mockito.verify(email, Mockito.times(3)).notificarAtraso(Mockito.any(Usuario.class));
         Mockito.verify(email).notificarAtraso(usuario);
+        Mockito.verify(email, Mockito.times(2)).notificarAtraso(usuario3); // O metodo ocorreu 2 vezes para o usuario3
+        Mockito.verify(email, Mockito.never()).notificarAtraso(usuario2); // O metodo nunca aconteceu para usuario2
+        Mockito.verifyNoMoreInteractions(email); // Não aconteceu mais chamadas para o metodo
     }
 
 }

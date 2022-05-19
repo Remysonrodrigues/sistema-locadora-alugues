@@ -34,4 +34,15 @@ public class LocacaoBuilder {
         return elemento;
     }
 
+    public LocacaoBuilder comUsuario(Usuario usuario) {
+        elemento.setUsuario(usuario);
+        return this;
+    }
+
+    public LocacaoBuilder atrasado() {
+        elemento.setDataLocacao(DataUtils.obterDataComDiferencaDias(-4));
+        elemento.setDataRetorno(DataUtils.obterDataComDiferencaDias(-2));
+        return this;
+    }
+
 }
