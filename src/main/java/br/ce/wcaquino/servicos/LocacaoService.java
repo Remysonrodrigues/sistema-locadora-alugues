@@ -85,16 +85,4 @@ public class LocacaoService {
 		}
 	}
 
-	public void setLocacaoDAO(LocacaoDAO dao) {
-		this.dao = dao;
-	}
-
-	public void setSPCService(SPCService spc) {
-		this.spc = spc;
-	}
-
-	public void setEmailService(EmailService email) {
-		this.email = email;
-	}
-
 }

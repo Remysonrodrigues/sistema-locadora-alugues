@@ -1,7 +1,6 @@
 package services;
 
 import br.ce.wcaquino.daos.LocacaoDAO;
-import br.ce.wcaquino.daos.LocacaoDAOFake;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
@@ -12,7 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.mockito.Mockito;
+import org.junit.runners.Parameterized.Parameter;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,24 +26,27 @@ import static org.junit.Assert.assertThat;
 @RunWith(Parameterized.class)
 public class CalculoValorLocacaoTest {
 
-    @Parameterized.Parameter
+    @Parameter
     public List<Filme> filmes;
 
-    @Parameterized.Parameter(value = 1)
+    @Parameter(value = 1)
     public Double valorLocacao;
 
-    @Parameterized.Parameter(value = 2)
+    @Parameter(value = 2)
     public String cenario;
 
+    @InjectMocks
     private LocacaoService service;
+
+    @Mock
+    private LocacaoDAO dao;
+
+    @Mock
+    private SPCService spc;
 
     @Before
     public void setup() { // Executa antes de cada teste
-        service = new LocacaoService();
-        LocacaoDAO dao = Mockito.mock(LocacaoDAO.class);
-        service.setLocacaoDAO(dao);
-        SPCService spc = Mockito.mock(SPCService.class);
-        service.setSPCService(spc);
+        MockitoAnnotations.initMocks(this); // Injeta os mocks
     }
 
     @Parameterized.Parameters(name = "{2}")
