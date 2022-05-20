@@ -16,10 +16,14 @@ import builders.UsuarioBuilder;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.*;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +33,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({LocacaoService.class, DataUtils.class})
+@PowerMockIgnore("jdk.internal.reflect.*")
 public class LocacaoServiceTest {
 
     @Rule
@@ -70,11 +77,13 @@ public class LocacaoServiceTest {
     @Test
     public void deveAlugarFilme() throws Exception {
         // Assuma que este esta não sera executado em um sabado
-        Assume.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
+        //Assume.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
 
         //cenario
         Usuario usuario = UsuarioBuilder.umUsuario().agora();
         List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().comValor(5.0).agora());
+
+        PowerMockito.whenNew(Date.class).withNoArguments().thenReturn(DataUtils.obterData(13, 5, 2022));
 
         //acao
         Locacao locacao = service.alugarFilme(usuario, filmes);
@@ -129,14 +138,18 @@ public class LocacaoServiceTest {
     @Test
     public void deveDevolverFilmeNaSegundaAoAlugarNoSabado() throws Exception {
         // Assuma que esse teste sera executado em um sabado
-        Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SUNDAY));
+        //Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SUNDAY));
         //cenario
         Usuario usuario = UsuarioBuilder.umUsuario().agora();
         List<Filme> filmes = Arrays.asList(FilmeBuilder.umFilme().agora());
+
+        PowerMockito.whenNew(Date.class).withNoArguments().thenReturn(DataUtils.obterData(14, 5, 2022));
+
         //acao
         Locacao resultado = service.alugarFilme(usuario, filmes);
         //verificacao
-        assertThat(resultado.getDataRetorno(), cairNumaSegunda());
+        Assert.assertThat(resultado.getDataRetorno(), cairNumaSegunda());
+        //PowerMockito.verifyNew(Date.class, Mockito.times(2)).withNoArguments(); // Verifica se o construtor esta sendo chamado duas vezes
     }
 
     @Test
