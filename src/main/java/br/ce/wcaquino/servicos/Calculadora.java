@@ -21,4 +21,9 @@ public class Calculadora {
     public int divide(String a, String b) {
         return Integer.parseInt(a) / Integer.parseInt(b);
     }
+
+    public void imprime() {
+        System.out.println("Passei aq");
+    }
+
 }
